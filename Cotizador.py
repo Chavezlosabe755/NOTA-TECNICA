@@ -279,52 +279,64 @@ footer { visibility: hidden; }
 
 # SVG del logo Bouclier (águila/fénix estilizado con círculo y texto)
 LOGO_SVG = """
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="48" fill="#7B1C35" stroke="#C4B5A5" stroke-width="2"/>
-  <circle cx="50" cy="50" r="42" fill="none" stroke="#C4B5A5" stroke-width="0.8"/>
-  <!-- Cuerpo del ave -->
-  <ellipse cx="50" cy="54" rx="10" ry="14" fill="#f5ede8"/>
-  <!-- Alas -->
-  <path d="M40 50 Q25 38 22 48 Q30 52 40 55 Z" fill="#f5ede8"/>
-  <path d="M60 50 Q75 38 78 48 Q70 52 60 55 Z" fill="#f5ede8"/>
-  <!-- Alas secundarias -->
-  <path d="M40 46 Q28 32 26 42 Q33 46 40 50 Z" fill="#C4B5A5"/>
-  <path d="M60 46 Q72 32 74 42 Q67 46 60 50 Z" fill="#C4B5A5"/>
-  <!-- Cabeza -->
-  <circle cx="50" cy="40" r="8" fill="#f5ede8"/>
-  <!-- Pico -->
-  <path d="M50 44 L53 47 L50 46 Z" fill="#C4B5A5"/>
-  <!-- Ojo -->
-  <circle cx="52" cy="39" r="1.5" fill="#7B1C35"/>
-  <!-- Cola -->
-  <path d="M44 66 Q50 72 56 66 Q53 70 50 74 Q47 70 44 66 Z" fill="#f5ede8"/>
-  <!-- Plumas corona -->
-  <path d="M46 33 Q47 26 50 28 Q53 26 54 33" fill="none" stroke="#C4B5A5" stroke-width="1.2"/>
-  <circle cx="50" cy="26" r="1.5" fill="#C4B5A5"/>
-  <!-- Texto BOUCLIER -->
-  <path id="curve" d="M 15 50 A 35 35 0 0 1 85 50" fill="none"/>
-  <text font-family="serif" font-size="7" fill="#C4B5A5" letter-spacing="2">
-    <textPath href="#curve" startOffset="15%">BOUCLIER</textPath>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <circle cx="100" cy="100" r="96" stroke="#f5ede8" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="84" stroke="#f5ede8" stroke-width="1.2"/>
+  <path d="M28 100 A72 72 0 0 1 36 65" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M164 65 A72 72 0 0 1 172 100" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M30 118 A72 72 0 0 0 42 148" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M158 148 A72 72 0 0 0 170 118" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="25" cy="100" r="3.5" fill="#f5ede8"/>
+  <circle cx="175" cy="100" r="3.5" fill="#f5ede8"/>
+  <path id="arc1" d="M 22 88 A 80 80 0 0 1 178 88" fill="none"/>
+  <text font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#f5ede8" letter-spacing="5">
+    <textPath href="#arc1" startOffset="12%">BOUCLIER</textPath>
   </text>
+  <path d="M80 75 Q76 66 84 60 Q92 54 104 58 Q116 54 122 62 Q130 70 124 80 Q120 87 112 86" stroke="#f5ede8" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M80 75 Q76 84 82 90 Q90 96 104 96 Q108 104 100 108 Q90 110 82 102 Q72 92 74 78" stroke="#f5ede8" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M96 64 Q100 58 106 62 Q100 68 96 64Z" stroke="#f5ede8" stroke-width="1.5" fill="#f5ede8" opacity="0.5"/>
+  <circle cx="102" cy="64" r="2.5" fill="#f5ede8"/>
+  <path d="M108 58 Q116 46 126 44 Q120 54 128 62" stroke="#f5ede8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M112 56 Q124 38 138 36 Q130 50 136 62" stroke="#f5ede8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M122 80 Q136 72 148 62 Q142 76 152 80 Q142 88 150 96 Q138 94 142 106 Q130 102 128 112" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 90 Q78 102 76 116 Q74 128 80 140" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M104 96 Q108 108 106 122 Q104 134 100 144" stroke="#f5ede8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M80 140 Q74 150 68 162 Q78 156 74 168 Q86 158 82 170 Q92 160 90 172 Q100 160 100 144" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M100 144 Q110 160 118 172 Q108 160 112 168 Q104 158 106 166 Q96 156 100 144" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M100 140 Q90 130 86 118 Q84 130 80 140 Q90 136 100 140 Q110 136 120 140 Q116 130 114 118 Q110 130 100 140Z" stroke="#f5ede8" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M96 130 Q100 124 104 130 Q108 138 100 142 Q92 138 96 130Z" stroke="#f5ede8" stroke-width="1.5"/>
 </svg>
 """
 
 LOGO_SVG_SMALL = """
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="48" fill="none"/>
-  <ellipse cx="50" cy="54" rx="10" ry="14" fill="#f5ede8"/>
-  <path d="M40 50 Q25 38 22 48 Q30 52 40 55 Z" fill="#f5ede8"/>
-  <path d="M60 50 Q75 38 78 48 Q70 52 60 55 Z" fill="#f5ede8"/>
-  <path d="M40 46 Q28 32 26 42 Q33 46 40 50 Z" fill="#C4B5A5"/>
-  <path d="M60 46 Q72 32 74 42 Q67 46 60 50 Z" fill="#C4B5A5"/>
-  <circle cx="50" cy="40" r="8" fill="#f5ede8"/>
-  <path d="M50 44 L53 47 L50 46 Z" fill="#C4B5A5"/>
-  <circle cx="52" cy="39" r="1.5" fill="#7B1C35"/>
-  <path d="M44 66 Q50 72 56 66 Q53 70 50 74 Q47 70 44 66 Z" fill="#f5ede8"/>
-  <path d="M46 33 Q47 26 50 28 Q53 26 54 33" fill="none" stroke="#C4B5A5" stroke-width="1.2"/>
-  <circle cx="50" cy="26" r="1.5" fill="#C4B5A5"/>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <circle cx="100" cy="100" r="96" stroke="#f5ede8" stroke-width="2.5"/>
+  <circle cx="100" cy="100" r="84" stroke="#f5ede8" stroke-width="1.2"/>
+  <path d="M28 100 A72 72 0 0 1 36 65" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M164 65 A72 72 0 0 1 172 100" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M30 118 A72 72 0 0 0 42 148" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M158 148 A72 72 0 0 0 170 118" stroke="#f5ede8" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="25" cy="100" r="3.5" fill="#f5ede8"/>
+  <circle cx="175" cy="100" r="3.5" fill="#f5ede8"/>
+  <path id="arc2" d="M 22 88 A 80 80 0 0 1 178 88" fill="none"/>
+  <text font-family="Georgia,serif" font-size="15" font-weight="bold" fill="#f5ede8" letter-spacing="5">
+    <textPath href="#arc2" startOffset="12%">BOUCLIER</textPath>
+  </text>
+  <path d="M80 75 Q76 66 84 60 Q92 54 104 58 Q116 54 122 62 Q130 70 124 80 Q120 87 112 86" stroke="#f5ede8" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M80 75 Q76 84 82 90 Q90 96 104 96 Q108 104 100 108 Q90 110 82 102 Q72 92 74 78" stroke="#f5ede8" stroke-width="2.2" stroke-linejoin="round"/>
+  <circle cx="102" cy="64" r="2.5" fill="#f5ede8"/>
+  <path d="M108 58 Q116 46 126 44 Q120 54 128 62" stroke="#f5ede8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M112 56 Q124 38 138 36 Q130 50 136 62" stroke="#f5ede8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M122 80 Q136 72 148 62 Q142 76 152 80 Q142 88 150 96 Q138 94 142 106 Q130 102 128 112" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 90 Q78 102 76 116 Q74 128 80 140" stroke="#f5ede8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M104 96 Q108 108 106 122 Q104 134 100 144" stroke="#f5ede8" stroke-width="2" stroke-linecap="round"/>
+  <path d="M80 140 Q74 150 68 162 Q78 156 74 168 Q86 158 82 170 Q92 160 90 172 Q100 160 100 144" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M100 144 Q110 160 118 172 Q108 160 112 168 Q104 158 106 166 Q96 156 100 144" stroke="#f5ede8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M100 140 Q90 130 86 118 Q84 130 80 140 Q90 136 100 140 Q110 136 120 140 Q116 130 114 118 Q110 130 100 140Z" stroke="#f5ede8" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M96 130 Q100 124 104 130 Q108 138 100 142 Q92 138 96 130Z" stroke="#f5ede8" stroke-width="1.5"/>
 </svg>
 """
+
 
 # ─────────────────────────────────────────────
 # CARGA DE DATOS
