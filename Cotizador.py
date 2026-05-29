@@ -614,7 +614,25 @@ else:
     # Pantalla vacía
     st.markdown("""
     <div style="text-align:center;padding:5rem 2rem">
-        <div style="font-size:3.5rem;margin-bottom:1rem">🛡️</div>
+        <div style="margin-bottom:1rem"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:80px;height:80px;display:inline-block">
+  <path d="M100 185 C60 170 28 140 20 100 L20 45 C20 38 26 33 33 35 L100 18 L167 35 C174 33 180 38 180 45 L180 100 C172 140 140 170 100 185Z" fill="#4a0d1a" opacity="0.3" transform="translate(3,4)"/>
+  <path d="M100 180 C62 165 30 136 22 98 L22 46 C22 40 27 36 33 37 L100 21 L167 37 C173 36 178 40 178 46 L178 98 C170 136 138 165 100 180Z" fill="#7B1C35"/>
+  <path d="M100 170 C68 156 40 130 33 96 L33 52 C33 48 37 45 41 46 L100 32 L159 46 C163 45 167 48 167 52 L167 96 C160 130 132 156 100 170Z" fill="none" stroke="#C4B5A5" stroke-width="1.5"/>
+  <line x1="35" y1="100" x2="165" y2="100" stroke="#C4B5A5" stroke-width="1" opacity="0.6"/>
+  <line x1="100" y1="34" x2="100" y2="168" stroke="#C4B5A5" stroke-width="1" opacity="0.6"/>
+  <circle cx="67" cy="66" r="14" fill="#C4B5A5" opacity="0.25"/>
+  <circle cx="67" cy="66" r="8" fill="#C4B5A5" opacity="0.4"/>
+  <circle cx="67" cy="66" r="3" fill="#f5ede8"/>
+  <path d="M122 52 L133 66 L122 80 L111 66 Z" fill="#C4B5A5" opacity="0.35"/>
+  <path d="M122 57 L129 66 L122 75 L115 66 Z" fill="#f5ede8" opacity="0.5"/>
+  <path d="M55 108 L79 108 L79 132 L55 132 Z" fill="none" stroke="#C4B5A5" stroke-width="1.2" opacity="0.5"/>
+  <path d="M60 113 L74 113 L74 127 L60 127 Z" fill="#C4B5A5" opacity="0.3"/>
+  <path d="M109 115 L121 109 L133 115 L133 129 L121 135 L109 129 Z" fill="none" stroke="#C4B5A5" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="121" cy="122" r="4" fill="#C4B5A5" opacity="0.5"/>
+  <path d="M94 165 L100 178 L106 165 Z" fill="#C4B5A5" opacity="0.6"/>
+  <circle cx="45" cy="47" r="3" fill="#C4B5A5" opacity="0.7"/>
+  <circle cx="155" cy="47" r="3" fill="#C4B5A5" opacity="0.7"/>
+</svg></div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#7B1C35;margin-bottom:0.5rem;font-weight:700">
             Configura los parámetros en el panel izquierdo
         </div>
