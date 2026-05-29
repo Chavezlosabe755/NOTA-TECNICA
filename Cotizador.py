@@ -51,15 +51,18 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] select,
 [data-testid="stSidebar"] .stSelectbox > div,
-[data-testid="stSidebar"] .stNumberInput > div > div {
-    background-color: rgba(255,255,255,0.08) !important;
-    border-color: rgba(196,181,165,0.4) !important;
-    color: #f5ede8 !important;
+[data-testid="stSidebar"] .stNumberInput > div > div,
+[data-testid="stSidebar"] .stDateInput input {
+    background-color: #ffffff !important;
+    border-color: rgba(196,181,165,0.6) !important;
+    color: #111111 !important;
     border-radius: 6px !important;
 }
+[data-testid="stSidebar"] input::placeholder { color: #888888 !important; }
+[data-testid="stSidebar"] .stSelectbox span { color: #111111 !important; }
 [data-testid="stSidebar"] .stButton > button {
-    background-color: #7B1C35 !important;
-    color: #f5ede8 !important;
+    background-color: #f5ede8 !important;
+    color: #7B1C35 !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 8px !important;
@@ -402,7 +405,7 @@ with st.sidebar:
 
     st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
     no_poliza     = st.text_input("No. Póliza", value="INC0001")
-    fecha_emision = st.date_input("Fecha de Emisión", value=date.today(), format="DD/MM/YYYY")
+    fecha_emision = st.date_input("Fecha de Emisión", value=date.today(), format="DD/MM/YYYY", disabled=True)
     fecha_inicio  = st.date_input("Fecha Inicio Vigencia", value=date.today(), format="DD/MM/YYYY")
     fecha_fin     = st.date_input("Fecha Fin Vigencia", format="DD/MM/YYYY",
                                    value=date.today().replace(year=date.today().year + 1))
@@ -432,7 +435,7 @@ with st.sidebar:
             sa = st.number_input(
                 "SA", min_value=0.0, max_value=500_000_000.0,
                 value=1_000_000.0 if i == 0 else 0.0,
-                step=10_000.0, format="%.2f",
+                step=10_000.0, format="%.0f",
                 key=f"sa_{i}", label_visibility="collapsed",
                 disabled=not activa
             )
