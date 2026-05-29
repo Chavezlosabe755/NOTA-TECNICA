@@ -561,7 +561,7 @@ if cotizar:
         cr_g = get_cr_global(cr_global_df, cob, tipo_bien)
         if cr_g is None: sin_datos.append(cob); continue
         f_geo  = get_f_geo(factor_geo_df, cob, tipo_bien, estado)
-        f_ded  = 1-get_f_ded(factor_ded_df, deducible)
+        f_ded  = get_f_ded(factor_ded_df, deducible)
         cr_fin = cr_g * f_geo * f_ded
         pr     = sa * cr_fin / 1000
         pt     = pr / (1 - CARGOS)
@@ -570,7 +570,7 @@ if cotizar:
             "cve": TIPOS_ORDEN.get(tipo_bien, ""), "tipo_bien": tipo_bien,
             "cobertura": cob, "sa": sa, "cr_global": cr_g, "f_geo": f_geo,
             "cr_final": cr_fin, "pr": pr, "deducible": deducible,
-            "f_ded": f_ded, "prima": prima, "recibo": prima / m, "pt": pt,
+            "f_ded": 1-f_ded, "prima": prima, "recibo": prima / m, "pt": pt,
         })
 
     if sin_datos:
