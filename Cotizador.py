@@ -131,7 +131,7 @@ section[data-testid="stSidebar"] > div {
     overflow: hidden;
     border: 3px solid #C4B5A5;
 }
-.logo-wrap img { width: 80px; height: 80px; object-fit: contain; mix-blend-mode: multiply; }
+.logo-wrap img { width: 80px; height: 80px; object-fit: contain; filter: invert(1); }
 
 /* Sección título */
 .seccion-titulo {
@@ -252,12 +252,12 @@ section[data-testid="stSidebar"] > div {
 }
 .sidebar-logo-wrap .sb-logo {
     width: 52px; height: 52px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
+    background: transparent;
     display: flex; align-items: center; justify-content: center;
     border: 2px solid rgba(196,181,165,0.5); flex-shrink: 0;
     overflow: hidden;
 }
-.sidebar-logo-wrap .sb-logo img { width: 44px; height: 44px; object-fit: contain; mix-blend-mode: multiply; }
+.sidebar-logo-wrap .sb-logo img { width: 44px; height: 44px; object-fit: contain; filter: brightness(0) invert(1); }
 .sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: #C4B5A5 !important; }
 .sidebar-sub { font-size: 0.68rem; color: #C4B5A5 !important; letter-spacing: 0.1em; text-transform: uppercase; }
 
