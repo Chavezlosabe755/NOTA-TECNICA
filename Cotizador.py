@@ -11,130 +11,300 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
+from datetime import date
 
-# ─────────────────────────────────────────────
-# CONFIGURACIÓN DE PÁGINA
-# ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="Cotizador | Casa Habitación",
-    page_icon="🏠",
+    page_title="Cotizador | Casa Habitación · Bouclier",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ─────────────────────────────────────────────
-# ESTILOS
+# ESTILOS — Branding Bouclier
+# Color principal: guinda #7B1C35
+# Acento beige:   #C4B5A5
+# Fondo claro:    #F8F5F2
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F5F2;
+    color: #1a1a2e;
+}
 
-.stApp { background-color: #0f1117; color: #e8e8e8; }
+.stApp { background-color: #F8F5F2; }
 
+/* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #161b27;
-    border-right: 1px solid #2a3142;
+    background-color: #7B1C35 !important;
+    border-right: none;
 }
+[data-testid="stSidebar"] * { color: #f5ede8 !important; }
+[data-testid="stSidebar"] .seccion-titulo {
+    color: #C4B5A5 !important;
+    border-bottom-color: rgba(196,181,165,0.3) !important;
+}
+[data-testid="stSidebar"] input,
+[data-testid="stSidebar"] select,
+[data-testid="stSidebar"] .stSelectbox > div,
+[data-testid="stSidebar"] .stNumberInput > div > div {
+    background-color: rgba(255,255,255,0.12) !important;
+    border-color: rgba(196,181,165,0.4) !important;
+    color: #f5ede8 !important;
+    border-radius: 6px !important;
+}
+[data-testid="stSidebar"] .stButton > button {
+    background-color: #f5ede8 !important;
+    color: #7B1C35 !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.03em;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: #C4B5A5 !important;
+}
+[data-testid="stSidebar"] label { color: #f0e6df !important; font-size: 0.82rem !important; }
+[data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
+[data-testid="stSidebar"] .stCheckbox label { font-size: 0.85rem !important; }
 
-.titulo-principal {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.4rem;
-    color: #f5f0e8;
-    line-height: 1.15;
-    margin-bottom: 0.2rem;
+/* Header strip */
+.header-strip {
+    background: linear-gradient(135deg, #7B1C35 60%, #5a1326 100%);
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-height: 110px;
 }
-.subtitulo {
-    font-size: 0.95rem;
-    color: #7a8599;
-    letter-spacing: 0.08em;
+.header-deco {
+    width: 120px;
+    min-height: 110px;
+    background: linear-gradient(160deg, #C4B5A5 0%, #a89888 100%);
+    clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%);
+    flex-shrink: 0;
+}
+.header-content {
+    flex: 1;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header-text h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f5ede8;
+    margin: 0 0 0.2rem 0;
+    letter-spacing: 0.02em;
+}
+.header-text p {
+    font-size: 0.78rem;
+    color: #C4B5A5;
+    margin: 0;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 2rem;
 }
 
+/* Logo SVG Bouclier */
+.logo-wrap {
+    width: 90px; height: 90px;
+    background: #f5ede8;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 3px solid #C4B5A5;
+}
+.logo-wrap svg { width: 70px; height: 70px; }
+
+/* Sección título */
+.seccion-titulo {
+    font-size: 0.68rem;
+    color: #7B1C35;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    margin: 1.4rem 0 0.6rem 0;
+    border-bottom: 2px solid #7B1C35;
+    padding-bottom: 0.35rem;
+}
+
+/* Cards */
 .card {
-    background: #1a2035;
-    border: 1px solid #2a3142;
+    background: #fff;
+    border: 1px solid #e8ddd8;
     border-radius: 12px;
-    padding: 1.4rem 1.6rem;
+    padding: 1.3rem 1.6rem;
     margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(123,28,53,0.06);
 }
 .card-label {
-    font-size: 0.78rem;
-    color: #7a8599;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.3rem;
+    font-size: 0.72rem; color: #9a8a84;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem;
 }
 .card-value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: #d4b896;
-    line-height: 1.1;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; color: #7B1C35; line-height: 1.1; font-weight: 700;
 }
-.card-sub { font-size: 0.82rem; color: #7a8599; margin-top: 0.2rem; }
+.card-sub { font-size: 0.8rem; color: #9a8a84; margin-top: 0.25rem; }
 
+/* Métricas de datos */
+[data-testid="stMetric"] {
+    background: #fff;
+    border: 1px solid #e8ddd8;
+    border-radius: 10px;
+    padding: 0.8rem 1rem !important;
+    box-shadow: 0 1px 4px rgba(123,28,53,0.05);
+}
+[data-testid="stMetricLabel"] { color: #9a8a84 !important; font-size: 0.72rem !important; text-transform: uppercase; letter-spacing: 0.08em; }
+[data-testid="stMetricValue"] { color: #1a1a2e !important; font-size: 1.1rem !important; font-weight: 600 !important; }
+
+/* Tabla de cotización */
+.tbl { width:100%; border-collapse:collapse; font-size:0.83rem; }
+.tbl th {
+    background: #7B1C35;
+    color: #f5ede8;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.65rem 0.8rem;
+    text-align: right;
+    font-weight: 500;
+}
+.tbl th:first-child, .tbl th:nth-child(2), .tbl th:nth-child(3) { text-align: left; }
+.tbl td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid #f0e8e3;
+    color: #2a1a1e;
+    text-align: right;
+    vertical-align: middle;
+}
+.tbl td:first-child, .tbl td:nth-child(2), .tbl td:nth-child(3) { text-align: left; }
+.tbl tr:hover td { background: #fdf5f2; }
+.tbl tr.total-row td {
+    background: #fdf5f2;
+    color: #7B1C35;
+    font-weight: 700;
+    border-top: 2px solid #7B1C35;
+    border-bottom: none;
+    font-size: 0.88rem;
+}
+.badge-si {
+    background: #e8f5ee; color: #1a7a45;
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 0.72rem; font-weight: 700;
+}
+.badge-no {
+    background: #fdecea; color: #c0392b;
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 0.72rem; font-weight: 700;
+}
+
+/* Desglose */
 .desglose-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #2a3142;
-    font-size: 0.9rem;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.45rem 0; border-bottom: 1px solid #f0e8e3; font-size: 0.88rem;
 }
 .desglose-row:last-child { border-bottom: none; }
-.desglose-label { color: #a0aabb; }
-.desglose-valor { color: #e8e8e8; font-weight: 500; }
-
-/* Cabecera de tabla de coberturas */
-.cob-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.72rem;
-    color: #7a8599;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.4rem 0;
-    border-bottom: 1px solid #2a3142;
-    margin-bottom: 0.2rem;
+.desglose-label { color: #7a6a6e; }
+.desglose-valor { color: #1a1a2e; font-weight: 500; }
+.desglose-total {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.6rem 0; font-weight: 700; color: #7B1C35;
+    border-top: 2px solid #7B1C35; margin-top: 0.3rem; font-size: 0.95rem;
 }
 
+/* Alerta */
 .alerta {
-    background: #1e1a2e;
-    border-left: 3px solid #d4b896;
+    background: #fdf5f2;
+    border-left: 3px solid #7B1C35;
     border-radius: 6px;
     padding: 0.8rem 1rem;
-    font-size: 0.85rem;
-    color: #a0aabb;
+    font-size: 0.82rem;
+    color: #7a6a6e;
     margin-top: 1rem;
 }
 
-.seccion-titulo {
-    font-size: 0.72rem;
-    color: #7a8599;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin: 1.4rem 0 0.6rem 0;
-    border-bottom: 1px solid #2a3142;
-    padding-bottom: 0.4rem;
+/* Sidebar logo */
+.sidebar-logo-wrap {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.5rem 0 1rem 0; margin-bottom: 0.5rem;
 }
-
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 0;
-    font-size: 1rem;
-    border-top: 2px solid #d4b896;
-    margin-top: 0.4rem;
+.sidebar-logo-wrap .sb-logo {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid rgba(196,181,165,0.5); flex-shrink: 0;
 }
+.sidebar-logo-wrap .sb-logo svg { width: 36px; height: 36px; }
+.sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: #f5ede8 !important; }
+.sidebar-sub { font-size: 0.68rem; color: #C4B5A5 !important; letter-spacing: 0.1em; text-transform: uppercase; }
 
 footer { visibility: hidden; }
 #MainMenu { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 
+# SVG del logo Bouclier (águila/fénix estilizado con círculo y texto)
+LOGO_SVG = """
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="48" fill="#7B1C35" stroke="#C4B5A5" stroke-width="2"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#C4B5A5" stroke-width="0.8"/>
+  <!-- Cuerpo del ave -->
+  <ellipse cx="50" cy="54" rx="10" ry="14" fill="#f5ede8"/>
+  <!-- Alas -->
+  <path d="M40 50 Q25 38 22 48 Q30 52 40 55 Z" fill="#f5ede8"/>
+  <path d="M60 50 Q75 38 78 48 Q70 52 60 55 Z" fill="#f5ede8"/>
+  <!-- Alas secundarias -->
+  <path d="M40 46 Q28 32 26 42 Q33 46 40 50 Z" fill="#C4B5A5"/>
+  <path d="M60 46 Q72 32 74 42 Q67 46 60 50 Z" fill="#C4B5A5"/>
+  <!-- Cabeza -->
+  <circle cx="50" cy="40" r="8" fill="#f5ede8"/>
+  <!-- Pico -->
+  <path d="M50 44 L53 47 L50 46 Z" fill="#C4B5A5"/>
+  <!-- Ojo -->
+  <circle cx="52" cy="39" r="1.5" fill="#7B1C35"/>
+  <!-- Cola -->
+  <path d="M44 66 Q50 72 56 66 Q53 70 50 74 Q47 70 44 66 Z" fill="#f5ede8"/>
+  <!-- Plumas corona -->
+  <path d="M46 33 Q47 26 50 28 Q53 26 54 33" fill="none" stroke="#C4B5A5" stroke-width="1.2"/>
+  <circle cx="50" cy="26" r="1.5" fill="#C4B5A5"/>
+  <!-- Texto BOUCLIER -->
+  <path id="curve" d="M 15 50 A 35 35 0 0 1 85 50" fill="none"/>
+  <text font-family="serif" font-size="7" fill="#C4B5A5" letter-spacing="2">
+    <textPath href="#curve" startOffset="15%">BOUCLIER</textPath>
+  </text>
+</svg>
+"""
+
+LOGO_SVG_SMALL = """
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="48" fill="none"/>
+  <ellipse cx="50" cy="54" rx="10" ry="14" fill="#f5ede8"/>
+  <path d="M40 50 Q25 38 22 48 Q30 52 40 55 Z" fill="#f5ede8"/>
+  <path d="M60 50 Q75 38 78 48 Q70 52 60 55 Z" fill="#f5ede8"/>
+  <path d="M40 46 Q28 32 26 42 Q33 46 40 50 Z" fill="#C4B5A5"/>
+  <path d="M60 46 Q72 32 74 42 Q67 46 60 50 Z" fill="#C4B5A5"/>
+  <circle cx="50" cy="40" r="8" fill="#f5ede8"/>
+  <path d="M50 44 L53 47 L50 46 Z" fill="#C4B5A5"/>
+  <circle cx="52" cy="39" r="1.5" fill="#7B1C35"/>
+  <path d="M44 66 Q50 72 56 66 Q53 70 50 74 Q47 70 44 66 Z" fill="#f5ede8"/>
+  <path d="M46 33 Q47 26 50 28 Q53 26 54 33" fill="none" stroke="#C4B5A5" stroke-width="1.2"/>
+  <circle cx="50" cy="26" r="1.5" fill="#C4B5A5"/>
+</svg>
+"""
 
 # ─────────────────────────────────────────────
 # CARGA DE DATOS
@@ -144,171 +314,133 @@ EXCEL_PATH = "RESULTADOS_NOTA_TECNICA.xlsx"
 @st.cache_data(show_spinner="Cargando tablas actuariales…")
 def cargar_datos(path):
     xls = pd.ExcelFile(path)
-    cr_global    = pd.read_excel(xls, "CR_Global")
-    factor_geo   = pd.read_excel(xls, "Factor_Geografico")
-    factor_ded   = pd.read_excel(xls, "Factor_Deducible")
-    prima_tarifa = pd.read_excel(xls, "Prima_Tarifa")
-    return cr_global, factor_geo, factor_ded, prima_tarifa
-
+    return (
+        pd.read_excel(xls, "CR_Global"),
+        pd.read_excel(xls, "Factor_Geografico"),
+        pd.read_excel(xls, "Factor_Deducible"),
+    )
 
 # ─────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────
-def fmt_moneda(valor):
-    if valor is None or (isinstance(valor, float) and np.isnan(valor)):
-        return "—"
-    return f"${valor:,.2f}"
+def fmt_m(v):
+    if v is None or (isinstance(v, float) and np.isnan(v)): return "—"
+    return f"${v:,.2f}"
 
 def factor_financiero(j, m):
-    denominador = sum((1 + j / m) ** (-k) for k in range(m))
-    return m / denominador
+    return m / sum((1 + j/m)**(-k) for k in range(m))
 
-def calcular_una_cobertura(
-    cr_global_df, factor_geo_df, factor_ded_df,
-    cobertura, tipo_bien, estado,
-    suma_asegurada, deducible,
-    gasto_admin, gasto_adq, margen_ut,
-    tasa_anual, m, ff,
-):
-    """Calcula prima para UNA cobertura. Devuelve dict o None si no hay datos."""
+def get_cr_global(cr_df, cobertura, tipo_bien):
+    mask = (cr_df["COBERTURA"] == cobertura) & (cr_df["TIPO DE BIEN"] == tipo_bien)
+    f = cr_df[mask]
+    if f.empty: return None
+    v = f["CR_GLOBAL"].values[0]
+    return None if pd.isna(v) or v == 0 else v
 
-    # 1. CR Global
-    mask_g = (
-        (cr_global_df["COBERTURA"]    == cobertura) &
-        (cr_global_df["TIPO DE BIEN"] == tipo_bien)
-    )
-    fila_g = cr_global_df[mask_g]
-    if fila_g.empty:
-        return None
-    cr_global = fila_g["CR_GLOBAL"].values[0]
-    if pd.isna(cr_global) or cr_global == 0:
-        return None
+def get_f_geo(geo_df, cobertura, tipo_bien, estado):
+    mask = (geo_df["COBERTURA"] == cobertura) & (geo_df["TIPO DE BIEN"] == tipo_bien) & (geo_df["ENTIDAD"] == estado)
+    f = geo_df[mask]
+    if f.empty: return 1.0
+    v = f["FACTOR_GEO"].values[0]
+    return 1.0 if pd.isna(v) or v <= 0 else v
 
-    # 2. Factor geográfico
-    mask_geo = (
-        (factor_geo_df["COBERTURA"]    == cobertura) &
-        (factor_geo_df["TIPO DE BIEN"] == tipo_bien) &
-        (factor_geo_df["ENTIDAD"]      == estado)
-    )
-    fila_geo = factor_geo_df[mask_geo]
-    f_geo = fila_geo["FACTOR_GEO"].values[0] if not fila_geo.empty else 1.0
-    if pd.isna(f_geo) or f_geo <= 0:
-        f_geo = 1.0
+def get_f_ded(ded_df, deducible):
+    f = ded_df[ded_df["DEDUCIBLE"] == deducible]
+    if f.empty: return 1.0
+    v = f["f"].values[0]
+    return 1.0 if pd.isna(v) else v
 
-    # 3. Factor deducible
-    fila_ded = factor_ded_df[factor_ded_df["DEDUCIBLE"] == deducible]
-    f_ded = fila_ded["f"].values[0] if not fila_ded.empty else 1.0
-    if pd.isna(f_ded):
-        f_ded = 1.0
-
-    # 4. Cuota y primas
-    cr_final     = cr_global * f_geo * f_ded
-    prima_riesgo = suma_asegurada * cr_final / 1000
-    cargos       = gasto_admin + gasto_adq + margen_ut
-    prima_tarifa = prima_riesgo / (1 - cargos)
-    prima_recargo = prima_tarifa * ff if m > 1 else prima_tarifa
-    recibo        = prima_recargo / m
-
-    return {
-        "cobertura"    : cobertura,
-        "cr_global"    : cr_global,
-        "f_geo"        : f_geo,
-        "f_ded"        : f_ded,
-        "cr_final"     : cr_final,
-        "prima_riesgo" : prima_riesgo,
-        "prima_tarifa" : prima_tarifa,
-        "prima_recargo": prima_recargo,
-        "recibo"       : recibo,
-        "g_admin"      : prima_tarifa * gasto_admin,
-        "g_adq"        : prima_tarifa * gasto_adq,
-        "g_ut"         : prima_tarifa * margen_ut,
-    }
-
-
-# ─────────────────────────────────────────────
-# ENCABEZADO
-# ─────────────────────────────────────────────
-_, col_titulo = st.columns([1, 5])
-with col_titulo:
-    st.markdown('<div class="titulo-principal">Cotizador<br>Casa Habitación</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subtitulo">Bouclier Seguros de Daños · Ramo Incendio</div>', unsafe_allow_html=True)
-
-st.divider()
 
 # ─────────────────────────────────────────────
 # CARGAR DATOS
 # ─────────────────────────────────────────────
 if not os.path.exists(EXCEL_PATH):
-    st.error(
-        f"⚠️ No se encontró **{EXCEL_PATH}** en el directorio actual.\n\n"
-        "Corre primero el notebook y coloca el Excel en la misma carpeta que este script."
-    )
+    st.error(f"⚠️ No se encontró **{EXCEL_PATH}**. Corre primero el notebook.")
     st.stop()
-
 try:
-    cr_global_df, factor_geo_df, factor_ded_df, prima_tarifa_df = cargar_datos(EXCEL_PATH)
+    cr_global_df, factor_geo_df, factor_ded_df = cargar_datos(EXCEL_PATH)
 except Exception as e:
-    st.error(f"Error al leer el Excel: {e}")
-    st.stop()
+    st.error(f"Error al leer el Excel: {e}"); st.stop()
 
-coberturas_disponibles = sorted(cr_global_df["COBERTURA"].dropna().unique().tolist())
-tipos_bien_disponibles = sorted(cr_global_df["TIPO DE BIEN"].dropna().unique().tolist())
-estados_disponibles    = sorted(factor_geo_df["ENTIDAD"].dropna().unique().tolist())
-deducibles_disponibles = sorted(factor_ded_df["DEDUCIBLE"].dropna().unique().tolist())
+coberturas_disp = sorted(cr_global_df["COBERTURA"].dropna().unique().tolist())
+tipos_disp      = sorted(cr_global_df["TIPO DE BIEN"].dropna().unique().tolist())
+estados_disp    = sorted(factor_geo_df["ENTIDAD"].dropna().unique().tolist())
+deducibles_disp = sorted(factor_ded_df["DEDUCIBLE"].dropna().unique().tolist())
+TIPOS_ORDEN     = {t: i+1 for i, t in enumerate(tipos_disp)}
 
 
 # ─────────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
+    # Logo + marca en sidebar
+    st.markdown(f"""
+    <div class="sidebar-logo-wrap">
+        <div class="sb-logo">{LOGO_SVG_SMALL}</div>
+        <div>
+            <div class="sidebar-brand">Bouclier</div>
+            <div class="sidebar-sub">Seguros de Daños</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
+    no_poliza     = st.text_input("No. Póliza", value="INC0001")
+    fecha_emision = st.date_input("Fecha de Emisión", value=date.today())
+    fecha_inicio  = st.date_input("Fecha Inicio Vigencia", value=date.today())
+    fecha_fin     = st.date_input("Fecha Fin Vigencia",
+                                   value=date.today().replace(year=date.today().year + 1))
+
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
-
-    estado = st.selectbox("Entidad Federativa", estados_disponibles)
-
-    tipo_bien = st.selectbox(
-        "Tipo de Bien",
-        tipos_bien_disponibles,
-        help="Contenidos, Edificio o Contenidos y Edificio"
-    )
-
-    # ── MULTISELECT de coberturas ──
-    coberturas_sel = st.multiselect(
-        "Coberturas",
-        coberturas_disponibles,
-        default=[coberturas_disponibles[0]] if coberturas_disponibles else [],
-        help="Puedes seleccionar una o varias coberturas; la prima total es la suma de cada una."
-    )
-
-    suma_asegurada = st.number_input(
-        "Suma Asegurada ($)",
-        min_value=10_000.0,
-        max_value=500_000_000.0,
-        value=1_000_000.0,
-        step=10_000.0,
-        format="%.2f",
-    )
-
-    deducible = st.selectbox(
-        "Deducible ($)",
-        deducibles_disponibles,
-        index=0,
-        format_func=lambda x: f"${x:,.0f}",
-    )
+    estado    = st.selectbox("Entidad Federativa", estados_disp)
+    tipo_bien = st.selectbox("Tipo de Bien", tipos_disp)
+    deducible = st.selectbox("Deducible ($)", deducibles_disp,
+                              format_func=lambda x: f"${x:,.0f}")
 
     st.markdown('<div class="seccion-titulo">Forma de Pago</div>', unsafe_allow_html=True)
+    forma_pago = st.radio("Periodicidad",
+                          ["Anual", "Semestral", "Trimestral", "Mensual"])
 
-    forma_pago = st.radio(
-        "Periodicidad",
-        ["Anual", "Semestral", "Trimestral", "Mensual"],
-    )
+    GASTO_ADMIN = 0.20; GASTO_ADQ = 0.05; MARGEN_UT = 0.06
+    TASA_ANUAL  = 0.08; CARGOS    = GASTO_ADMIN + GASTO_ADQ + MARGEN_UT
 
-    # Supuestos técnicos fijos (no editables por el usuario)
-    gasto_admin = 0.20
-    gasto_adq   = 0.05
-    margen_ut   = 0.06
-    tasa_anual  = 0.08
+    st.markdown('<div class="seccion-titulo">Coberturas a Cotizar</div>', unsafe_allow_html=True)
+    st.caption("Activa cada cobertura e ingresa su Suma Asegurada")
+
+    coberturas_config = []
+    for i, cob in enumerate(coberturas_disp):
+        col_chk, col_sa = st.columns([1, 2])
+        with col_chk:
+            activa = st.checkbox(cob, value=(i == 0), key=f"chk_{i}")
+        with col_sa:
+            sa = st.number_input(
+                "SA", min_value=0.0, max_value=500_000_000.0,
+                value=1_000_000.0 if i == 0 else 0.0,
+                step=10_000.0, format="%.0f",
+                key=f"sa_{i}", label_visibility="collapsed",
+                disabled=not activa
+            )
+        if activa and sa > 0:
+            coberturas_config.append({"cobertura": cob, "sa": sa})
 
     cotizar = st.button("Calcular Cotización", use_container_width=True, type="primary")
+
+
+# ─────────────────────────────────────────────
+# HEADER PRINCIPAL
+# ─────────────────────────────────────────────
+st.markdown(f"""
+<div class="header-strip">
+    <div class="header-deco"></div>
+    <div class="header-content">
+        <div class="header-text">
+            <h1>Cotizador · Casa Habitación</h1>
+            <p>Ramo Incendio · Seguros de Daños Bouclier · México</p>
+        </div>
+        <div class="logo-wrap">{LOGO_SVG}</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────
@@ -316,219 +448,172 @@ with st.sidebar:
 # ─────────────────────────────────────────────
 if cotizar:
 
-    if not coberturas_sel:
-        st.warning("⚠️ Selecciona al menos una cobertura.")
-        st.stop()
-
-    cargos = gasto_admin + gasto_adq + margen_ut
-    if cargos >= 1:
-        st.warning("⚠️ Los gastos totales no pueden ser ≥ 100%.")
+    if not coberturas_config:
+        st.warning("⚠️ Activa al menos una cobertura con Suma Asegurada > 0.")
         st.stop()
 
     pagos_map = {"Anual": 1, "Semestral": 2, "Trimestral": 4, "Mensual": 12}
     m  = pagos_map[forma_pago]
-    ff = factor_financiero(tasa_anual, m) if m > 1 else 1.0
+    ff = factor_financiero(TASA_ANUAL, m) if m > 1 else 1.0
 
-    # Calcular cada cobertura seleccionada
-    resultados = []
-    sin_datos  = []
-
-    for cob in coberturas_sel:
-        r = calcular_una_cobertura(
-            cr_global_df, factor_geo_df, factor_ded_df,
-            cob, tipo_bien, estado,
-            suma_asegurada, deducible,
-            gasto_admin, gasto_adq, margen_ut,
-            tasa_anual, m, ff,
-        )
-        if r:
-            resultados.append(r)
-        else:
-            sin_datos.append(cob)
+    filas = []; sin_datos = []
+    for cfg in coberturas_config:
+        cob = cfg["cobertura"]; sa = cfg["sa"]
+        cr_g = get_cr_global(cr_global_df, cob, tipo_bien)
+        if cr_g is None: sin_datos.append(cob); continue
+        f_geo  = get_f_geo(factor_geo_df, cob, tipo_bien, estado)
+        f_ded  = get_f_ded(factor_ded_df, deducible)
+        cr_fin = cr_g * f_geo * f_ded
+        pr     = sa * cr_fin / 1000
+        pt     = pr / (1 - CARGOS)
+        prima  = pt * ff if m > 1 else pt
+        filas.append({
+            "cve": TIPOS_ORDEN.get(tipo_bien, ""), "tipo_bien": tipo_bien,
+            "cobertura": cob, "sa": sa, "cr_global": cr_g, "f_geo": f_geo,
+            "cr_final": cr_fin, "pr": pr, "deducible": deducible,
+            "f_ded": f_ded, "prima": prima, "recibo": prima / m, "pt": pt,
+        })
 
     if sin_datos:
-        st.warning(f"⚠️ Sin datos para: {', '.join(sin_datos)}. Se excluyen del cálculo.")
+        st.warning(f"⚠️ Sin datos para: {', '.join(sin_datos)}. Se excluyen.")
+    if not filas:
+        st.error("Sin datos para ninguna cobertura seleccionada."); st.stop()
 
-    if not resultados:
-        st.error("No hay datos disponibles para ninguna de las coberturas seleccionadas.")
-        st.stop()
+    total_sa    = sum(f["sa"]    for f in filas)
+    total_pr    = sum(f["pr"]    for f in filas)
+    total_pt    = sum(f["pt"]    for f in filas)
+    total_prima = sum(f["prima"] for f in filas)
+    total_recibo= sum(f["recibo"] for f in filas)
+    total_cr    = total_pr / total_sa * 1000 if total_sa > 0 else 0
+    recargo_pct = (ff - 1) * 100 if m > 1 else 0.0
+    label_recibo = {1:"Pago Único Anual", 2:"Pago Semestral",
+                    4:"Pago Trimestral", 12:"Pago Mensual"}[m]
 
-    # Totales
-    total_prima_riesgo  = sum(r["prima_riesgo"]  for r in resultados)
-    total_prima_tarifa  = sum(r["prima_tarifa"]  for r in resultados)
-    total_prima_recargo = sum(r["prima_recargo"] for r in resultados)
-    total_recibo        = sum(r["recibo"]        for r in resultados)
+    # ── Datos de póliza ──
+    st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
+    p1, p2, p3, p4 = st.columns(4)
+    p1.metric("No. Póliza",      no_poliza)
+    p2.metric("Fecha Emisión",   fecha_emision.strftime("%d/%m/%Y"))
+    p3.metric("Inicio Vigencia", fecha_inicio.strftime("%d/%m/%Y"))
+    p4.metric("Fin Vigencia",    fecha_fin.strftime("%d/%m/%Y"))
 
-    # ── Resumen del riesgo ──
-    st.markdown('<div class="seccion-titulo">Resumen del Riesgo</div>', unsafe_allow_html=True)
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Estado", estado)
-    c2.metric("Tipo de Bien", tipo_bien)
-    c3.metric("Coberturas", str(len(resultados)))
-    c4.metric("Suma Asegurada", fmt_moneda(suma_asegurada))
+    # ── Datos del riesgo ──
+    st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
+    r1, r2, r3, r4 = st.columns(4)
+    r1.metric("Estado",      estado)
+    r2.metric("Tipo de Bien",tipo_bien)
+    r3.metric("Deducible",   f"${deducible:,.0f}")
+    r4.metric("Coberturas",  str(len(filas)))
+
+    # ── Tabla de cotización ──
+    st.markdown('<div class="seccion-titulo">Detalle de Coberturas</div>', unsafe_allow_html=True)
+
+    filas_html = ""
+    for f in filas:
+        filas_html += (
+            "<tr>"
+            f"<td>{f['cve']}</td>"
+            f"<td>{f['tipo_bien']}</td>"
+            f"<td>{f['cobertura']}</td>"
+            f"<td><span class='badge-si'>SI</span></td>"
+            f"<td>{fmt_m(f['sa'])}</td>"
+            f"<td>{f['cr_final']:.5f}</td>"
+            f"<td>{fmt_m(f['pr'])}</td>"
+            f"<td><span class='badge-si'>SI</span></td>"
+            f"<td>{fmt_m(f['deducible'])}</td>"
+            f"<td>{f['f_ded']:.4f}</td>"
+            f"<td><strong>{fmt_m(f['prima'])}</strong></td>"
+            "</tr>"
+        )
+
+    tabla_html = (
+        "<div class='card' style='overflow-x:auto;padding:0.5rem 0'>"
+        "<table class='tbl'>"
+        "<thead><tr>"
+        "<th>Cve</th><th>Tipo de Bien</th><th>Cobertura</th><th>SI/NO</th>"
+        "<th>Suma Asegurada</th><th>Cuota Riesgo ‰</th><th>Prima de Riesgo</th>"
+        "<th>Deducible</th><th>Valor Deducible</th><th>f<sub>DED</sub></th><th>Prima</th>"
+        "</tr></thead><tbody>"
+        + filas_html +
+        "<tr class='total-row'>"
+        "<td colspan='4'>TOTAL</td>"
+        f"<td>{fmt_m(total_sa)}</td>"
+        f"<td>{total_cr:.5f}</td>"
+        f"<td>{fmt_m(total_pr)}</td>"
+        "<td colspan='2'></td>"
+        "<td>Total Prima</td>"
+        f"<td>{fmt_m(total_prima)}</td>"
+        "</tr></tbody></table></div>"
+    )
+    st.markdown(tabla_html, unsafe_allow_html=True)
 
     # ── Tarjetas resumen ──
-    st.markdown('<div class="seccion-titulo">Resultado de la Cotización</div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
+    st.markdown('<div class="seccion-titulo">Resumen de Prima y Pago</div>', unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.markdown(f"""
         <div class="card">
-            <div class="card-label">Prima Total Anual</div>
-            <div class="card-value">{fmt_moneda(total_prima_recargo)}</div>
-            <div class="card-sub">{len(resultados)} cobertura{'s' if len(resultados)>1 else ''} · incluye recargo financiero</div>
+            <div class="card-label">Prima Total (con recargo financiero)</div>
+            <div class="card-value">{fmt_m(total_prima)}</div>
+            <div class="card-sub">Adm {GASTO_ADMIN*100:.0f}% · Adq {GASTO_ADQ*100:.0f}% · Utilidad {MARGEN_UT*100:.0f}%</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
-        label_pago = {1:"Pago Único", 2:"Recibo Semestral", 4:"Recibo Trimestral", 12:"Recibo Mensual"}[m]
         st.markdown(f"""
         <div class="card">
-            <div class="card-label">{label_pago}</div>
-            <div class="card-value">{fmt_moneda(total_recibo)}</div>
-            <div class="card-sub">{m} pago{'s' if m>1 else ''} de igual valor</div>
+            <div class="card-label">{label_recibo}</div>
+            <div class="card-value">{fmt_m(total_recibo)}</div>
+            <div class="card-sub">{m} pago{'s' if m>1 else ''} · Recargo {recargo_pct:.2f}% · Tasa {TASA_ANUAL*100:.0f}% anual</div>
         </div>
         """, unsafe_allow_html=True)
 
-    with col3:
-        recargo_monto = total_prima_recargo - total_prima_tarifa
-        recargo_pct   = (ff - 1) * 100 if m > 1 else 0.0
-        st.markdown(f"""
-        <div class="card">
-            <div class="card-label">Prima de Riesgo Total</div>
-            <div class="card-value">{fmt_moneda(total_prima_riesgo)}</div>
-            <div class="card-sub">Recargo financiero: {recargo_pct:.2f}%</div>
+    # Desglose numérico
+    st.markdown(f"""
+    <div class="card">
+        <div class="desglose-row">
+            <span class="desglose-label">Prima de Riesgo</span>
+            <span class="desglose-valor">{fmt_m(total_pr)}</span>
         </div>
-        """, unsafe_allow_html=True)
-
-    # ── Desglose por cobertura ──
-    st.markdown('<div class="seccion-titulo">Desglose por Cobertura</div>', unsafe_allow_html=True)
-
-    # Construir tabla completa en un solo bloque HTML
-    filas_html = ""
-    for r in resultados:
-        filas_html += (
-            '<div class="desglose-row">'
-            f'<span class="desglose-label" style="flex:2">{r["cobertura"]}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["cr_final"]:.6f}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["f_geo"]:.4f}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["f_ded"]:.4f}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_riesgo"])}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_tarifa"])}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_recargo"])}</span>'
-            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["recibo"])}</span>'
-            '</div>'
-        )
-
-    tabla_html = (
-        '<div class="card">'
-        '<div class="cob-header">'
-        '<span style="flex:2">Cobertura</span>'
-        '<span style="flex:1;text-align:right">CR Final ‰</span>'
-        '<span style="flex:1;text-align:right">f. Geo</span>'
-        '<span style="flex:1;text-align:right">f. Deducible</span>'
-        '<span style="flex:1;text-align:right">Prima Riesgo</span>'
-        '<span style="flex:1;text-align:right">Prima Tarifa</span>'
-        '<span style="flex:1;text-align:right">Prima c/Recargo</span>'
-        '<span style="flex:1;text-align:right">Recibo</span>'
-        '</div>'
-        + filas_html +
-        '<div class="total-row">'
-        '<span style="flex:2;font-weight:600;color:#d4b896">TOTAL</span>'
-        '<span style="flex:1"></span>'
-        '<span style="flex:1"></span>'
-        '<span style="flex:1"></span>'
-        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_riesgo)}</span>'
-        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_tarifa)}</span>'
-        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_recargo)}</span>'
-        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_recibo)}</span>'
-        '</div>'
-        '</div>'
-    )
-
-    st.markdown(tabla_html, unsafe_allow_html=True)
-
-    # ── Desglose de gastos (totales) ──
-    st.markdown('<div class="seccion-titulo">Construcción de la Prima Total</div>', unsafe_allow_html=True)
-
-    col_a, col_b = st.columns(2)
-
-    with col_a:
-        st.markdown(f"""
-        <div class="card">
-            <div class="desglose-row">
-                <span class="desglose-label">Prima de Riesgo (suma coberturas)</span>
-                <span class="desglose-valor">{fmt_moneda(total_prima_riesgo)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label">Gastos de Administración ({gasto_admin*100:.0f}%)</span>
-                <span class="desglose-valor">{fmt_moneda(total_prima_tarifa * gasto_admin)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label">Gastos de Adquisición ({gasto_adq*100:.0f}%)</span>
-                <span class="desglose-valor">{fmt_moneda(total_prima_tarifa * gasto_adq)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label">Margen de Utilidad ({margen_ut*100:.0f}%)</span>
-                <span class="desglose-valor">{fmt_moneda(total_prima_tarifa * margen_ut)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label" style="color:#d4b896;font-weight:600">= Prima de Tarifa</span>
-                <span class="desglose-valor" style="color:#d4b896">{fmt_moneda(total_prima_tarifa)}</span>
-            </div>
+        <div class="desglose-row">
+            <span class="desglose-label">Prima de Tarifa (÷ {1-CARGOS:.2f})</span>
+            <span class="desglose-valor">{fmt_m(total_pt)}</span>
         </div>
-        """, unsafe_allow_html=True)
-
-    with col_b:
-        st.markdown(f"""
-        <div class="card">
-            <div class="desglose-row">
-                <span class="desglose-label">Prima de Tarifa</span>
-                <span class="desglose-valor">{fmt_moneda(total_prima_tarifa)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label">Factor Financiero (j={tasa_anual*100:.1f}%, m={m})</span>
-                <span class="desglose-valor">{ff:.6f}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label">Recargo Financiero ({recargo_pct:.2f}%)</span>
-                <span class="desglose-valor">{fmt_moneda(recargo_monto)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label" style="color:#d4b896;font-weight:600">= Prima Total con Recargo</span>
-                <span class="desglose-valor" style="color:#d4b896">{fmt_moneda(total_prima_recargo)}</span>
-            </div>
-            <div class="desglose-row">
-                <span class="desglose-label" style="color:#d4b896;font-weight:600">= {label_pago}</span>
-                <span class="desglose-valor" style="color:#d4b896">{fmt_moneda(total_recibo)}</span>
-            </div>
+        <div class="desglose-row">
+            <span class="desglose-label">Recargo financiero · f = {ff:.6f}</span>
+            <span class="desglose-valor">{fmt_m(total_prima - total_pt)}</span>
         </div>
-        """, unsafe_allow_html=True)
+        <div class="desglose-total">
+            <span>Prima Total con Recargo</span>
+            <span>{fmt_m(total_prima)}</span>
+        </div>
+        <div class="desglose-total">
+            <span>{label_recibo} (÷{m})</span>
+            <span>{fmt_m(total_recibo)}</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # ── Nota de supuestos ──
-    cobs_txt = " · ".join([r["cobertura"] for r in resultados])
     st.markdown(f"""
     <div class="alerta">
-        <strong>Coberturas:</strong> {cobs_txt}<br>
-        <strong>Supuestos:</strong> Gastos totales {cargos*100:.0f}% · 
-        Tasa financiera {tasa_anual*100:.1f}% anual · 
-        Deducible ${deducible:,.0f} · 
-        Pago {forma_pago.lower()} ({m} {'pago' if m==1 else 'pagos'}) · 
-        f = {ff:.6f}<br>
-        <em>Cotización informativa basada en estadística SESA 2020-2024.</em>
+        <strong>Póliza {no_poliza}</strong> · Vigencia {fecha_inicio.strftime("%d/%m/%Y")} – {fecha_fin.strftime("%d/%m/%Y")} ·
+        Estado: {estado} · Deducible: ${deducible:,.0f}<br>
+        <em>Cotización informativa basada en estadística SESA 2020–2024. No constituye oferta de contrato.</em>
     </div>
     """, unsafe_allow_html=True)
 
 else:
+    # Pantalla vacía
     st.markdown("""
-    <div style="text-align:center; padding: 5rem 2rem; color: #4a5568;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🏠</div>
-        <div style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:#7a8599; margin-bottom:0.5rem;">
+    <div style="text-align:center;padding:5rem 2rem">
+        <div style="font-size:3.5rem;margin-bottom:1rem">🛡️</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:#7B1C35;margin-bottom:0.5rem;font-weight:700">
             Configura los parámetros en el panel izquierdo
         </div>
-        <div style="font-size:0.85rem; color:#4a5568;">
-            Estado · tipo de bien · coberturas · suma asegurada · deducible · forma de pago<br>
-            y presiona <strong>Calcular Cotización</strong>
+        <div style="font-size:0.88rem;color:#9a8a84">
+            Póliza · Estado · Tipo de bien · Coberturas con su Suma Asegurada · Deducible · Forma de pago<br>
+            y presiona <strong style="color:#7B1C35">Calcular Cotización</strong>
         </div>
     </div>
     """, unsafe_allow_html=True)
