@@ -403,12 +403,11 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
-    no_poliza     = st.text_input("No. Póliza", value="INC0001")
-    fecha_emision = st.date_input("Fecha de Emisión", value=date.today(), format="DD/MM/YYYY", disabled=True)
-    fecha_inicio  = st.date_input("Fecha Inicio Vigencia", value=date.today(), format="DD/MM/YYYY")
-    fecha_fin     = st.date_input("Fecha Fin Vigencia", format="DD/MM/YYYY",
-                                   value=date.today().replace(year=date.today().year + 1))
+    # Datos de póliza — generados automáticamente
+    no_poliza     = "INC0001"
+    fecha_emision = date.today()
+    fecha_inicio  = date.today()
+    fecha_fin     = date.today().replace(year=date.today().year + 1)
 
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
     estado    = st.selectbox("Entidad Federativa", estados_disp)
