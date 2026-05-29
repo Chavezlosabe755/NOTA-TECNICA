@@ -47,6 +47,7 @@ section[data-testid="stSidebar"] > div {
     border-right: none !important;
 }
 [data-testid="stSidebar"] * { color: #f5ede8 !important; }
+[data-testid="stSidebar"] input, [data-testid="stSidebar"] .stSelectbox span, [data-testid="stSidebar"] .stSelectbox div[data-baseweb] { color: #1a1a2e !important; }
 [data-testid="stSidebar"] .seccion-titulo {
     color: #C4B5A5 !important;
     border-bottom-color: rgba(196,181,165,0.4) !important;
@@ -55,9 +56,9 @@ section[data-testid="stSidebar"] > div {
 [data-testid="stSidebar"] select,
 [data-testid="stSidebar"] .stSelectbox > div,
 [data-testid="stSidebar"] .stNumberInput > div > div {
-    background-color: rgba(255,255,255,0.07) !important;
-    border-color: #2a3142 !important;
-    color: #e8e8e8 !important;
+    background-color: #ffffff !important;
+    border-color: #C4B5A5 !important;
+    color: #1a1a2e !important;
     border-radius: 6px !important;
 }
 [data-testid="stSidebar"] .stButton > button {
@@ -130,7 +131,7 @@ section[data-testid="stSidebar"] > div {
     overflow: hidden;
     border: 3px solid #C4B5A5;
 }
-.logo-wrap img { width: 80px; height: 80px; object-fit: contain; filter: brightness(0) invert(1); }
+.logo-wrap img { width: 80px; height: 80px; object-fit: contain; mix-blend-mode: multiply; }
 
 /* Sección título */
 .seccion-titulo {
@@ -256,7 +257,7 @@ section[data-testid="stSidebar"] > div {
     border: 2px solid rgba(196,181,165,0.5); flex-shrink: 0;
     overflow: hidden;
 }
-.sidebar-logo-wrap .sb-logo img { width: 44px; height: 44px; object-fit: contain; filter: brightness(0) invert(1); }
+.sidebar-logo-wrap .sb-logo img { width: 44px; height: 44px; object-fit: contain; mix-blend-mode: multiply; }
 .sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: #C4B5A5 !important; }
 .sidebar-sub { font-size: 0.68rem; color: #C4B5A5 !important; letter-spacing: 0.1em; text-transform: uppercase; }
 
@@ -264,15 +265,15 @@ section[data-testid="stSidebar"] > div {
 /* Sidebar negro — mejor visibilidad */
 [data-testid="stSidebar"] .stTextInput input,
 [data-testid="stSidebar"] .stDateInput input {
-    background-color: #1a1a1a !important;
-    border-color: #333 !important;
-    color: #e0d0c8 !important;
+    background-color: #ffffff !important;
+    border-color: #C4B5A5 !important;
+    color: #1a1a2e !important;
 }
 [data-testid="stSidebar"] .stSelectbox > div > div,
 [data-testid="stSidebar"] .stNumberInput input {
-    background-color: #1a1a1a !important;
-    border-color: #333 !important;
-    color: #e0d0c8 !important;
+    background-color: #ffffff !important;
+    border-color: #C4B5A5 !important;
+    color: #1a1a2e !important;
 }
 [data-testid="stSidebar"] .stRadio > div { gap: 0.3rem; }
 
