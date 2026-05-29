@@ -114,7 +114,7 @@ section[data-testid="stSidebar"] > div {
     color: #7B1C35 !important;
 }
 
-[data-testid="stSidebar"] label { color: #C4B5A5 !important; font-size: 0.82rem !important; }
+[data-testid="stSidebar"] label { color: #f5ede8 !important; font-size: 0.82rem !important; }
 [data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
 [data-testid="stSidebar"] .stCheckbox label { font-size: 0.85rem !important; }
 
@@ -887,3 +887,4 @@ else:
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
