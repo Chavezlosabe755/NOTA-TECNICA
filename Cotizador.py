@@ -13,6 +13,12 @@ import numpy as np
 import os
 from datetime import date
 import random
+import io
+try:
+    from fpdf import FPDF
+    FPDF_OK = True
+except ImportError:
+    FPDF_OK = False
 
 st.set_page_config(
     page_title="Cotizador | Casa Habitación · Bouclier",
@@ -78,6 +84,36 @@ section[data-testid="stSidebar"] > div {
 [data-testid="stSidebar"] .stButton > button:hover {
     background-color: #9B2C45 !important;
 }
+
+/* Botones +/- de NumberInput en sidebar */
+[data-testid="stSidebar"] button[data-testid="stNumberInputStepDown"],
+[data-testid="stSidebar"] button[data-testid="stNumberInputStepUp"],
+[data-testid="stSidebar"] .stNumberInput button {
+    background-color: #C4B5A5 !important;
+    color: #1a1a2e !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-weight: 700 !important;
+}
+[data-testid="stSidebar"] button[data-testid="stNumberInputStepDown"]:hover,
+[data-testid="stSidebar"] button[data-testid="stNumberInputStepUp"]:hover,
+[data-testid="stSidebar"] .stNumberInput button:hover {
+    background-color: #7B1C35 !important;
+    color: #f5ede8 !important;
+}
+/* Botón Calcular Cotización (primary) */
+[data-testid="stSidebar"] .stButton > button[kind="primary"],
+[data-testid="stSidebar"] .stButton > button[data-testid="baseButton-primary"] {
+    background-color: #C4B5A5 !important;
+    color: #1a1a2e !important;
+    border: 2px solid #C4B5A5 !important;
+    font-weight: 700 !important;
+}
+[data-testid="stSidebar"] .stButton > button[kind="primary"]:hover {
+    background-color: #f5ede8 !important;
+    color: #7B1C35 !important;
+}
+
 [data-testid="stSidebar"] label { color: #C4B5A5 !important; font-size: 0.82rem !important; }
 [data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
 [data-testid="stSidebar"] .stCheckbox label { font-size: 0.85rem !important; }
@@ -442,6 +478,13 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown('<div class="seccion-titulo">Datos del Asegurado</div>', unsafe_allow_html=True)
+    nombre       = st.text_input("Nombre(s)")
+    ap_paterno   = st.text_input("Apellido Paterno")
+    ap_materno   = st.text_input("Apellido Materno")
+    correo       = st.text_input("Correo electrónico")
+    telefono     = st.text_input("Teléfono celular")
+
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
     estado    = st.selectbox("Entidad Federativa", estados_disp)
     tipo_bien = st.selectbox("Tipo de Bien", tipos_disp)
@@ -551,6 +594,13 @@ if cotizar:
     p4.metric("Fin Vigencia",    fecha_fin.strftime("%d/%m/%Y"))
 
     # ── Datos del riesgo ──
+    st.markdown('<div class="seccion-titulo">Datos del Asegurado</div>', unsafe_allow_html=True)
+    nombre       = st.text_input("Nombre(s)")
+    ap_paterno   = st.text_input("Apellido Paterno")
+    ap_materno   = st.text_input("Apellido Materno")
+    correo       = st.text_input("Correo electrónico")
+    telefono     = st.text_input("Teléfono celular")
+
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Estado",      estado)
@@ -647,6 +697,14 @@ if cotizar:
     </div>
     """, unsafe_allow_html=True)
 
+    # ── Datos del asegurado en resultados ──
+    nombre_completo = f"{nombre} {ap_paterno} {ap_materno}".strip() or "—"
+    st.markdown('<div class="seccion-titulo">Datos del Asegurado</div>', unsafe_allow_html=True)
+    a1, a2, a3 = st.columns(3)
+    a1.metric("Nombre", nombre_completo)
+    a2.metric("Correo", correo or "—")
+    a3.metric("Teléfono", telefono or "—")
+
     st.markdown(f"""
     <div class="alerta">
         <strong>Póliza {no_poliza}</strong> · Vigencia {fecha_inicio.strftime("%d/%m/%Y")} – {fecha_fin.strftime("%d/%m/%Y")} ·
@@ -654,6 +712,148 @@ if cotizar:
         <em>Cotización informativa basada en estadística SESA 2020–2024. No constituye oferta de contrato.</em>
     </div>
     """, unsafe_allow_html=True)
+
+    # ── Contacto Bouclier ──
+    st.markdown("""
+    <div class="card" style="margin-top:1.5rem;border-left:4px solid #7B1C35;padding:1rem 1.5rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:#7B1C35;margin-bottom:0.6rem">
+            Contacto Bouclier Seguros de Daños
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 2rem;font-size:0.88rem;color:#4a4a4a">
+            <div>📞 <strong>Atención a Clientes:</strong> 800 268 2543</div>
+            <div>📧 <strong>Correo:</strong> contacto@bouclier.com.mx</div>
+            <div>📱 <strong>WhatsApp:</strong> +52 55 4768 2300</div>
+            <div>🌐 <strong>Web:</strong> www.bouclier.com.mx</div>
+        </div>
+        <div style="font-size:0.78rem;color:#888;margin-top:0.6rem">
+            Lunes a Viernes 9:00 – 18:00 h · Ciudad de México
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Descarga PDF ──
+    if FPDF_OK:
+        def generar_pdf():
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_margins(18, 18, 18)
+
+            # Encabezado
+            pdf.set_fill_color(123, 28, 53)
+            pdf.rect(0, 0, 210, 28, 'F')
+            pdf.set_text_color(245, 237, 232)
+            pdf.set_font("Helvetica", "B", 16)
+            pdf.set_xy(18, 8)
+            pdf.cell(0, 10, "BOUCLIER SEGUROS DE DAÑOS", ln=False)
+            pdf.set_font("Helvetica", "", 9)
+            pdf.set_xy(18, 18)
+            pdf.cell(0, 6, "Cotización · Casa Habitación · Ramo Incendio", ln=True)
+
+            pdf.set_text_color(30, 30, 30)
+            pdf.set_xy(18, 34)
+
+            def titulo(txt):
+                pdf.set_font("Helvetica", "B", 10)
+                pdf.set_text_color(123, 28, 53)
+                pdf.cell(0, 7, txt, ln=True)
+                pdf.set_draw_color(196, 181, 165)
+                pdf.line(18, pdf.get_y(), 192, pdf.get_y())
+                pdf.ln(2)
+                pdf.set_text_color(30, 30, 30)
+
+            def fila(lbl, val):
+                pdf.set_font("Helvetica", "", 9)
+                pdf.set_text_color(100, 100, 100)
+                pdf.cell(55, 6, lbl, ln=False)
+                pdf.set_text_color(30, 30, 30)
+                pdf.set_font("Helvetica", "B", 9)
+                pdf.cell(0, 6, str(val), ln=True)
+
+            # Datos póliza
+            titulo("DATOS DE LA PÓLIZA")
+            fila("No. Póliza:", no_poliza)
+            fila("Fecha Emisión:", fecha_emision.strftime("%d/%m/%Y"))
+            fila("Inicio Vigencia:", fecha_inicio.strftime("%d/%m/%Y"))
+            fila("Fin Vigencia:", fecha_fin.strftime("%d/%m/%Y"))
+            pdf.ln(3)
+
+            # Datos asegurado
+            titulo("DATOS DEL ASEGURADO")
+            fila("Nombre:", f"{nombre} {ap_paterno} {ap_materno}".strip() or "—")
+            fila("Correo:", correo or "—")
+            fila("Teléfono:", telefono or "—")
+            pdf.ln(3)
+
+            # Datos riesgo
+            titulo("DATOS DEL RIESGO")
+            fila("Entidad Federativa:", estado)
+            fila("Tipo de Bien:", tipo_bien)
+            fila("Deducible:", f"${deducible:,.0f}")
+            pdf.ln(3)
+
+            # Tabla coberturas
+            titulo("DETALLE DE COBERTURAS")
+            pdf.set_fill_color(123, 28, 53)
+            pdf.set_text_color(245, 237, 232)
+            pdf.set_font("Helvetica", "B", 8)
+            cols = [("Cobertura",52),("Suma Asegurada",38),("Cuota ‰",24),("Prima Riesgo",30),("Prima Total",30)]
+            for h,w in cols:
+                pdf.cell(w, 7, h, border=0, align="C", fill=True)
+            pdf.ln()
+            pdf.set_text_color(30, 30, 30)
+            for i, f_row in enumerate(filas):
+                fill = i % 2 == 0
+                pdf.set_fill_color(253, 240, 238) if fill else pdf.set_fill_color(255, 255, 255)
+                pdf.set_font("Helvetica", "", 8)
+                pdf.cell(52, 6, f_row["cobertura"][:28], border=0, fill=fill)
+                pdf.cell(38, 6, f"${f_row['sa']:,.0f}", border=0, align="R", fill=fill)
+                pdf.cell(24, 6, f"{f_row['cr_final']:.5f}", border=0, align="R", fill=fill)
+                pdf.cell(30, 6, f"${f_row['pr']:,.2f}", border=0, align="R", fill=fill)
+                pdf.set_font("Helvetica", "B", 8)
+                pdf.set_text_color(123, 28, 53)
+                pdf.cell(30, 6, f"${f_row['prima']:,.2f}", border=0, align="R", fill=fill, ln=True)
+                pdf.set_text_color(30, 30, 30)
+
+            # Total
+            pdf.set_fill_color(123, 28, 53)
+            pdf.set_text_color(245, 237, 232)
+            pdf.set_font("Helvetica", "B", 9)
+            pdf.cell(52+38+24+30, 7, "TOTAL", border=0, fill=True)
+            pdf.cell(30, 7, f"${total_prima:,.2f}", border=0, align="R", fill=True, ln=True)
+            pdf.ln(4)
+
+            # Resumen
+            titulo("RESUMEN DE PRIMA")
+            fila("Prima de Riesgo:", f"${total_pr:,.2f}")
+            fila("Prima de Tarifa:", f"${total_pt:,.2f}")
+            fila("Forma de Pago:", forma_pago)
+            fila(f"{label_recibo}:", f"${total_recibo:,.2f}")
+            fila("Prima Total:", f"${total_prima:,.2f}")
+            pdf.ln(4)
+
+            # Pie con contacto
+            pdf.set_fill_color(245, 237, 232)
+            pdf.set_x(18)
+            pdf.set_font("Helvetica", "B", 8)
+            pdf.set_text_color(123, 28, 53)
+            pdf.cell(0, 6, "Contacto Bouclier Seguros de Daños", ln=True)
+            pdf.set_font("Helvetica", "", 8)
+            pdf.set_text_color(80, 80, 80)
+            pdf.cell(0, 5, "800 268 2543  |  contacto@bouclier.com.mx  |  +52 55 4768 2300  |  www.bouclier.com.mx", ln=True)
+            pdf.cell(0, 5, "Cotización informativa. No constituye oferta de contrato.", ln=True)
+
+            return bytes(pdf.output())
+
+        pdf_bytes = generar_pdf()
+        st.download_button(
+            label="⬇️  Descargar Cotización PDF",
+            data=pdf_bytes,
+            file_name=f"Cotizacion_{no_poliza}.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+    else:
+        st.info("Instala fpdf2 para habilitar la descarga: `pip install fpdf2`")
 
 else:
     # Pantalla vacía
