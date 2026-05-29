@@ -570,7 +570,7 @@ if cotizar:
             "cve": TIPOS_ORDEN.get(tipo_bien, ""), "tipo_bien": tipo_bien,
             "cobertura": cob, "sa": sa, "cr_global": cr_g, "f_geo": f_geo,
             "cr_final": cr_fin, "pr": pr, "deducible": deducible,
-            "f_ded": 1-f_ded, "prima": prima, "recibo": prima / m, "pt": pt,
+            "f_ded": f_ded, "prima": prima, "recibo": prima / m, "pt": pt,
         })
 
     if sin_datos:
