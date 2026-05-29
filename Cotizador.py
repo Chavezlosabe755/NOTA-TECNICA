@@ -40,7 +40,7 @@ html, body, [class*="css"] {
 
 /* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #7B1C35 !important;
+    background-color: #0d0d0d !important;
     border-right: none;
 }
 [data-testid="stSidebar"] * { color: #f5ede8 !important; }
@@ -52,14 +52,14 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] select,
 [data-testid="stSidebar"] .stSelectbox > div,
 [data-testid="stSidebar"] .stNumberInput > div > div {
-    background-color: rgba(255,255,255,0.12) !important;
+    background-color: rgba(255,255,255,0.08) !important;
     border-color: rgba(196,181,165,0.4) !important;
     color: #f5ede8 !important;
     border-radius: 6px !important;
 }
 [data-testid="stSidebar"] .stButton > button {
-    background-color: #f5ede8 !important;
-    color: #7B1C35 !important;
+    background-color: #7B1C35 !important;
+    color: #f5ede8 !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 8px !important;
@@ -68,7 +68,7 @@ html, body, [class*="css"] {
     letter-spacing: 0.03em;
 }
 [data-testid="stSidebar"] .stButton > button:hover {
-    background-color: #C4B5A5 !important;
+    background-color: #9B2C45 !important;
 }
 [data-testid="stSidebar"] label { color: #f0e6df !important; font-size: 0.82rem !important; }
 [data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
@@ -249,8 +249,24 @@ html, body, [class*="css"] {
     border: 2px solid rgba(196,181,165,0.5); flex-shrink: 0;
 }
 .sidebar-logo-wrap .sb-logo svg { width: 36px; height: 36px; }
-.sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: #f5ede8 !important; }
+.sidebar-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: #C4B5A5 !important; }
 .sidebar-sub { font-size: 0.68rem; color: #C4B5A5 !important; letter-spacing: 0.1em; text-transform: uppercase; }
+
+
+/* Sidebar negro — mejor visibilidad */
+[data-testid="stSidebar"] .stTextInput input,
+[data-testid="stSidebar"] .stDateInput input {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #e0d0c8 !important;
+}
+[data-testid="stSidebar"] .stSelectbox > div > div,
+[data-testid="stSidebar"] .stNumberInput input {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #e0d0c8 !important;
+}
+[data-testid="stSidebar"] .stRadio > div { gap: 0.3rem; }
 
 footer { visibility: hidden; }
 #MainMenu { visibility: hidden; }
@@ -386,9 +402,9 @@ with st.sidebar:
 
     st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
     no_poliza     = st.text_input("No. Póliza", value="INC0001")
-    fecha_emision = st.date_input("Fecha de Emisión", value=date.today())
-    fecha_inicio  = st.date_input("Fecha Inicio Vigencia", value=date.today())
-    fecha_fin     = st.date_input("Fecha Fin Vigencia",
+    fecha_emision = st.date_input("Fecha de Emisión", value=date.today(), format="DD/MM/YYYY")
+    fecha_inicio  = st.date_input("Fecha Inicio Vigencia", value=date.today(), format="DD/MM/YYYY")
+    fecha_fin     = st.date_input("Fecha Fin Vigencia", format="DD/MM/YYYY",
                                    value=date.today().replace(year=date.today().year + 1))
 
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
@@ -416,10 +432,12 @@ with st.sidebar:
             sa = st.number_input(
                 "SA", min_value=0.0, max_value=500_000_000.0,
                 value=1_000_000.0 if i == 0 else 0.0,
-                step=10_000.0, format="%.0f",
+                step=10_000.0, format="%.2f",
                 key=f"sa_{i}", label_visibility="collapsed",
                 disabled=not activa
             )
+            if activa and sa > 0:
+                st.caption(f"$ {sa:,.0f}")
         if activa and sa > 0:
             coberturas_config.append({"cobertura": cob, "sa": sa})
 
