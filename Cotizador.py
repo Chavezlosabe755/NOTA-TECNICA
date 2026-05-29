@@ -558,7 +558,7 @@ if cotizar:
     filas = []; sin_datos = []
     for cfg in coberturas_config:
         cob = cfg["cobertura"]; sa = cfg["sa"]
-        cr_g = get_cr_global(cr_global_df, cob, tipo_bien) * 10
+        cr_g = get_cr_global(cr_global_df, cob, tipo_bien)
         if cr_g is None: sin_datos.append(cob); continue
         f_geo  = get_f_geo(factor_geo_df, cob, tipo_bien, estado)
         f_ded  = get_f_ded(factor_ded_df, deducible)
