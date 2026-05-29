@@ -562,7 +562,7 @@ if cotizar:
         if cr_g is None: sin_datos.append(cob); continue
         f_geo  = get_f_geo(factor_geo_df, cob, tipo_bien, estado)
         f_ded  = get_f_ded(factor_ded_df, deducible)
-        cr_fin = cr_g * f_geo * f_ded
+        cr_fin = cr_g * f_geo * f_ded * 10
         pr     = sa * cr_fin /1000
         pt     = pr / (1 - CARGOS)
         prima  = pt * ff if m > 1 else pt
