@@ -702,8 +702,8 @@ if cotizar:
     st.markdown('<div class="seccion-titulo">Datos del Asegurado</div>', unsafe_allow_html=True)
     a1, a2, a3 = st.columns(3)
     a1.metric("Nombre", nombre_completo)
-    a2.metric("Correo", correo or "—")
-    a3.metric("Teléfono", telefono or "—")
+    a2.metric("Correo", correo or "-")
+    a3.metric("Teléfono", telefono or "-")
 
     st.markdown(f"""
     <div class="alerta">
@@ -747,7 +747,7 @@ if cotizar:
             pdf.cell(0, 10, "BOUCLIER SEGUROS DE DAÑOS", ln=False)
             pdf.set_font("Helvetica", "", 9)
             pdf.set_xy(18, 18)
-            pdf.cell(0, 6, "Cotización · Casa Habitación · Ramo Incendio", ln=True)
+            pdf.cell(0, 6, "Cotizacion - Casa Habitacion - Ramo Incendio", ln=True)
 
             pdf.set_text_color(30, 30, 30)
             pdf.set_xy(18, 34)
@@ -779,9 +779,9 @@ if cotizar:
 
             # Datos asegurado
             titulo("DATOS DEL ASEGURADO")
-            fila("Nombre:", f"{nombre} {ap_paterno} {ap_materno}".strip() or "—")
-            fila("Correo:", correo or "—")
-            fila("Teléfono:", telefono or "—")
+            fila("Nombre:", f"{nombre} {ap_paterno} {ap_materno}".strip().replace("-","-") or "-")
+            fila("Correo:", correo or "-")
+            fila("Teléfono:", telefono or "-")
             pdf.ln(3)
 
             # Datos riesgo
@@ -796,7 +796,7 @@ if cotizar:
             pdf.set_fill_color(123, 28, 53)
             pdf.set_text_color(245, 237, 232)
             pdf.set_font("Helvetica", "B", 8)
-            cols = [("Cobertura",52),("Suma Asegurada",38),("Cuota ‰",24),("Prima Riesgo",30),("Prima Total",30)]
+            cols = [("Cobertura",52),("Suma Asegurada",38),("Cuota o/oo",24),("Prima Riesgo",30),("Prima Total",30)]
             for h,w in cols:
                 pdf.cell(w, 7, h, border=0, align="C", fill=True)
             pdf.ln()
