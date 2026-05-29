@@ -596,14 +596,6 @@ if cotizar:
     p3.metric("Inicio Vigencia", fecha_inicio.strftime("%d/%m/%Y"))
     p4.metric("Fin Vigencia",    fecha_fin.strftime("%d/%m/%Y"))
 
-    # ── Datos del riesgo ──
-    st.markdown('<div class="seccion-titulo">Datos del Asegurado</div>', unsafe_allow_html=True)
-    nombre       = st.text_input("Nombre(s)")
-    ap_paterno   = st.text_input("Apellido Paterno")
-    ap_materno   = st.text_input("Apellido Materno")
-    correo       = st.text_input("Correo electrónico")
-    telefono     = st.text_input("Teléfono celular")
-
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Estado",      estado)
@@ -890,6 +882,3 @@ else:
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-
-    
