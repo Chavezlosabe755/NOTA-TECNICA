@@ -78,7 +78,7 @@ section[data-testid="stSidebar"] > div {
 [data-testid="stSidebar"] .stButton > button:hover {
     background-color: #9B2C45 !important;
 }
-[data-testid="stSidebar"] label { color: #a0aabb !important; font-size: 0.82rem !important; }
+[data-testid="stSidebar"] label { color: #C4B5A5 !important; font-size: 0.82rem !important; }
 [data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
 [data-testid="stSidebar"] .stCheckbox label { font-size: 0.85rem !important; }
 
