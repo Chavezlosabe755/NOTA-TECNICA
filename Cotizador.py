@@ -54,10 +54,13 @@ section[data-testid="stSidebar"] > div {
     border-right: none !important;
 }
 [data-testid="stSidebar"] * { color: #f5ede8 !important; }
-[data-testid="stSidebar"] input, [data-testid="stSidebar"] .stSelectbox span, [data-testid="stSidebar"] .stSelectbox div[data-baseweb] { color: #1a1a2e !important; }
-[data-testid="stSidebar"] .stSelectbox * { color: #1a1a2e !important; }
+[data-testid="stSidebar"] input { color: #1a1a2e !important; }
+[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] span,
+[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] div,
+[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] { color: #1a1a2e !important; }
 [data-testid="stSidebar"] .stRadio span { color: #f5ede8 !important; }
 [data-testid="stSidebar"] .stCheckbox span { color: #f5ede8 !important; }
+[data-testid="stSidebar"] .stNumberInput input { color: #1a1a2e !important; }
 [data-testid="stSidebar"] .seccion-titulo {
     color: #C4B5A5 !important;
     border-bottom-color: rgba(196,181,165,0.4) !important;
@@ -887,4 +890,6 @@ else:
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+
     
