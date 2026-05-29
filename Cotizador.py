@@ -404,50 +404,49 @@ if cotizar:
     # ── Desglose por cobertura ──
     st.markdown('<div class="seccion-titulo">Desglose por Cobertura</div>', unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class="card">
-        <div class="cob-header">
-            <span style="flex:2">Cobertura</span>
-            <span style="flex:1;text-align:right">CR Final ‰</span>
-            <span style="flex:1;text-align:right">f. Geo</span>
-            <span style="flex:1;text-align:right">f. Deducible</span>
-            <span style="flex:1;text-align:right">Prima Riesgo</span>
-            <span style="flex:1;text-align:right">Prima Tarifa</span>
-            <span style="flex:1;text-align:right">Prima c/Recargo</span>
-            <span style="flex:1;text-align:right">Recibo</span>
-        </div>
-    """, unsafe_allow_html=True)
-
+    # Construir tabla completa en un solo bloque HTML
     filas_html = ""
     for r in resultados:
-        filas_html += f"""
-        <div class="desglose-row">
-            <span class="desglose-label" style="flex:2">{r['cobertura']}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{r['cr_final']:.6f}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{r['f_geo']:.4f}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{r['f_ded']:.4f}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r['prima_riesgo'])}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r['prima_tarifa'])}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r['prima_recargo'])}</span>
-            <span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r['recibo'])}</span>
-        </div>
-        """
+        filas_html += (
+            '<div class="desglose-row">'
+            f'<span class="desglose-label" style="flex:2">{r["cobertura"]}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["cr_final"]:.6f}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["f_geo"]:.4f}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{r["f_ded"]:.4f}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_riesgo"])}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_tarifa"])}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["prima_recargo"])}</span>'
+            f'<span class="desglose-valor" style="flex:1;text-align:right">{fmt_moneda(r["recibo"])}</span>'
+            '</div>'
+        )
 
-    # Fila de totales
-    filas_html += f"""
-    <div class="total-row">
-        <span style="flex:2;font-weight:600;color:#d4b896">TOTAL</span>
-        <span style="flex:1"></span>
-        <span style="flex:1"></span>
-        <span style="flex:1"></span>
-        <span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_riesgo)}</span>
-        <span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_tarifa)}</span>
-        <span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_recargo)}</span>
-        <span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_recibo)}</span>
-    </div>
-    """
+    tabla_html = (
+        '<div class="card">'
+        '<div class="cob-header">'
+        '<span style="flex:2">Cobertura</span>'
+        '<span style="flex:1;text-align:right">CR Final ‰</span>'
+        '<span style="flex:1;text-align:right">f. Geo</span>'
+        '<span style="flex:1;text-align:right">f. Deducible</span>'
+        '<span style="flex:1;text-align:right">Prima Riesgo</span>'
+        '<span style="flex:1;text-align:right">Prima Tarifa</span>'
+        '<span style="flex:1;text-align:right">Prima c/Recargo</span>'
+        '<span style="flex:1;text-align:right">Recibo</span>'
+        '</div>'
+        + filas_html +
+        '<div class="total-row">'
+        '<span style="flex:2;font-weight:600;color:#d4b896">TOTAL</span>'
+        '<span style="flex:1"></span>'
+        '<span style="flex:1"></span>'
+        '<span style="flex:1"></span>'
+        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_riesgo)}</span>'
+        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_tarifa)}</span>'
+        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_prima_recargo)}</span>'
+        f'<span style="flex:1;text-align:right;font-weight:600;color:#d4b896">{fmt_moneda(total_recibo)}</span>'
+        '</div>'
+        '</div>'
+    )
 
-    st.markdown(filas_html + "</div>", unsafe_allow_html=True)
+    st.markdown(tabla_html, unsafe_allow_html=True)
 
     # ── Desglose de gastos (totales) ──
     st.markdown('<div class="seccion-titulo">Construcción de la Prima Total</div>', unsafe_allow_html=True)
