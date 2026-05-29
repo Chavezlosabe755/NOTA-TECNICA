@@ -38,31 +38,28 @@ html, body, [class*="css"] {
 
 .stApp { background-color: #F8F5F2; }
 
-/* Sidebar */
+/* Sidebar — oscuro */
 [data-testid="stSidebar"] {
-    background-color: #0d0d0d !important;
-    border-right: none;
+    background-color: #161b27 !important;
+    border-right: 1px solid #2a3142;
 }
-[data-testid="stSidebar"] * { color: #f5ede8 !important; }
+[data-testid="stSidebar"] * { color: #e8e8e8 !important; }
 [data-testid="stSidebar"] .seccion-titulo {
-    color: #C4B5A5 !important;
-    border-bottom-color: rgba(196,181,165,0.3) !important;
+    color: #7a8599 !important;
+    border-bottom-color: #2a3142 !important;
 }
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] select,
 [data-testid="stSidebar"] .stSelectbox > div,
-[data-testid="stSidebar"] .stNumberInput > div > div,
-[data-testid="stSidebar"] .stDateInput input {
-    background-color: #ffffff !important;
-    border-color: rgba(196,181,165,0.6) !important;
-    color: #111111 !important;
+[data-testid="stSidebar"] .stNumberInput > div > div {
+    background-color: rgba(255,255,255,0.07) !important;
+    border-color: #2a3142 !important;
+    color: #e8e8e8 !important;
     border-radius: 6px !important;
 }
-[data-testid="stSidebar"] input::placeholder { color: #888888 !important; }
-[data-testid="stSidebar"] .stSelectbox span { color: #111111 !important; }
 [data-testid="stSidebar"] .stButton > button {
-    background-color: #f5ede8 !important;
-    color: #7B1C35 !important;
+    background-color: #7B1C35 !important;
+    color: #f5ede8 !important;
     font-weight: 700 !important;
     border: none !important;
     border-radius: 8px !important;
@@ -73,7 +70,7 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] .stButton > button:hover {
     background-color: #9B2C45 !important;
 }
-[data-testid="stSidebar"] label { color: #f0e6df !important; font-size: 0.82rem !important; }
+[data-testid="stSidebar"] label { color: #a0aabb !important; font-size: 0.82rem !important; }
 [data-testid="stSidebar"] .stRadio label { font-size: 0.88rem !important; }
 [data-testid="stSidebar"] .stCheckbox label { font-size: 0.85rem !important; }
 
@@ -403,11 +400,33 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # Datos de póliza — generados automáticamente
+    # Datos de póliza — fijos, no editables
     no_poliza     = "INC0001"
     fecha_emision = date.today()
     fecha_inicio  = date.today()
     fecha_fin     = date.today().replace(year=date.today().year + 1)
+
+    st.markdown('<div class="seccion-titulo">Datos de la Póliza</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="font-size:0.82rem;line-height:1.8;margin-bottom:0.5rem">
+        <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px solid rgba(196,181,165,0.2)">
+            <span style="color:#C4B5A5">No. Póliza</span>
+            <span style="font-weight:600">{no_poliza}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px solid rgba(196,181,165,0.2)">
+            <span style="color:#C4B5A5">Fecha Emisión</span>
+            <span style="font-weight:600">{fecha_emision.strftime('%d/%m/%Y')}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px solid rgba(196,181,165,0.2)">
+            <span style="color:#C4B5A5">Inicio Vigencia</span>
+            <span style="font-weight:600">{fecha_inicio.strftime('%d/%m/%Y')}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:0.25rem 0">
+            <span style="color:#C4B5A5">Fin Vigencia</span>
+            <span style="font-weight:600">{fecha_fin.strftime('%d/%m/%Y')}</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown('<div class="seccion-titulo">Datos del Riesgo</div>', unsafe_allow_html=True)
     estado    = st.selectbox("Entidad Federativa", estados_disp)
@@ -637,4 +656,3 @@ else:
         </div>
     </div>
     """, unsafe_allow_html=True)
-
